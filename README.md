@@ -1,5 +1,8 @@
 # FreightFox — Dispatch Load Balancer
 
+[![Java CI](https://github.com/ashh-droid/dispatch-load-balancer/actions/workflows/ci.yml/badge.svg)](https://github.com/ashh-droid/dispatch-load-balancer/actions/workflows/ci.yml)
+
+
 Backend-only Java 21 / Spring Boot 3.4 REST API for capacity-constrained delivery planning. This project implements the FreightFox assignment's required endpoints and adds tested algorithm options, explicit infeasibility reporting, pagination and data reset for repeated demonstrations.
 
 **The optimization is heuristic, not globally optimal.** The Haversine formula estimates great-circle distance, not road kilometres, traffic or ETA. The public endpoints intentionally have no authentication per the assessment scope; do not expose this API as a real multi-user logistics service without authentication and authorization.
@@ -13,7 +16,7 @@ mvn -B verify
 mvn spring-boot:run
 ```
 
-Windows PowerShell uses the same `mvn` commands after Java and Maven are added to `PATH`. This repository does not ship a handmade Maven bootstrapper. To generate the **official Maven Wrapper** on a machine with Maven and an internet connection, run `mvn -N wrapper:wrapper -Dmaven=3.9.11 -Dtype=only-script` and commit the generated `mvnw`, `mvnw.cmd` and `.mvn` changes.
+**The official Maven Wrapper is included** (`mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties`). On Windows PowerShell you can use `./mvnw.cmd -B verify` and `./mvnw.cmd spring-boot:run` without installing Maven globally; on Linux/macOS use `./mvnw`. A first-time wrapper invocation still requires network access to download Maven. Running with Java 21 avoids the Byte Buddy/Mockito incompatibility observed when this Java 21 project was tested under Java 25.
 
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - OpenAPI: http://localhost:8080/v3/api-docs
@@ -109,13 +112,15 @@ mvn -B verify
 # inspect target/site/jacoco/index.html
 ```
 
-`verify` runs unit, MVC, H2 repository, full application, ArchUnit layer-rule and seeded property-style scenario tests. JaCoCo is configured to report coverage and enforce an **80% line-coverage threshold for the algorithm and distance packages**. A GitHub Actions workflow runs the same command on pushes to `main` and pull requests; check the actual workflow outcome in GitHub before adding a green status badge or reporting a coverage percentage.
+`verify` runs unit, MVC, H2 repository, full application, ArchUnit layer-rule and seeded property-style scenario tests. JaCoCo enforces an **80% line-coverage threshold for the algorithm and distance packages**.
+
+**Verified November 13, 2026:** the complete Maven verification succeeded locally, and the `Java CI` workflow passed on the initial repository commit. The supplied local JaCoCo HTML report showed **90% instruction coverage, 80% branch coverage, and approximately 92% line coverage overall**. Coverage values describe that verified run, not a guarantee about future revisions; rerun `verify` and read `target/site/jacoco/index.html` after changes. The status badge above reflects GitHub's latest CI result.
 
 Important tests: official sample regression, Haversine calculations, capacity invariants, deterministic tie breaking, unassigned reasons, bad content types (415/406), invalid field types, malformed requests, invalid strategy names, CRUD flows and 200 seeded-random scenarios for the two algorithms. A performance-tagged test also checks a large order set, but deliberately does not impose unstable wall-clock CI limits.
 
 ## Deployment
 
-The included multi-stage Dockerfile compiles the JAR and runs it under a **non-root** user. The backend listens on `${PORT:8080}`. A hosted application needs a public HTTPS URL and accessible Swagger UI, as specified in the assignment email. Do not claim deployment until the running endpoint is verified. The local H2 database resets whenever the container restarts; production persistence should use PostgreSQL.
+The included multi-stage Dockerfile compiles the JAR and runs it under a **non-root** user. The backend listens on `${PORT:8080}`, and forwarded proxy headers are handled for correct Swagger links behind an HTTPS proxy. A hosted application needs a public HTTPS URL and accessible Swagger UI, as specified in the assessment email. **No live deployment is claimed here until its URL is verified.** The default H2 database resets whenever the container restarts. See [deployment and submission steps](docs/DEPLOYMENT.md), including private-repository setup, sample-data upload and optional PostgreSQL.
 
 ## Future production improvements
 
