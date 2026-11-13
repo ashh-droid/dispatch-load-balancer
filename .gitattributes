@@ -1,0 +1,6 @@
+# Predictable line endings for Windows and Unix Maven launchers.
+* text=auto
+mvnw text eol=lf
+mvnw.cmd text eol=crlf
+*.sh text eol=lf
+*.bat text eol=crlf
