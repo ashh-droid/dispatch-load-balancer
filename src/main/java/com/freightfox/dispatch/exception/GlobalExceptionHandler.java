@@ -82,7 +82,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, body, headers, status, request);
     }
 
-    @ExceptionHandler({DuplicateIdException.class, InvalidStrategyException.class})
+    @ExceptionHandler({DuplicateIdException.class, InvalidStrategyException.class, InvalidRequestException.class})
     public ResponseEntity<ErrorResponse> invalid(RuntimeException ex) {
         return ResponseEntity.badRequest().body(ErrorResponse.of(ex.getMessage()));
     }
@@ -93,7 +93,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> invalidParameter(ConstraintViolationException ex) {
-        return ResponseEntity.badRequest().body(ErrorResponse.of("Invalid pagination or query parameter."));
+        var errors = ex.getConstraintViolations().stream()
+                .map(v -> new FieldError(v.getPropertyPath().toString().replaceFirst("^.*\\.", ""), v.getMessage()))
+                .sorted(Comparator.comparing(FieldError::field)).toList();
+        return ResponseEntity.badRequest().body(new ErrorResponse("error", "Validation failed.", errors));
     }
     @ExceptionHandler(DeleteDisabledException.class)
     public ResponseEntity<ErrorResponse> deleteDisabled(DeleteDisabledException ex) {
