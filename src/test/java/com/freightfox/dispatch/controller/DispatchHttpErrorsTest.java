@@ -46,6 +46,11 @@ class DispatchHttpErrorsTest {
         mvc.perform(get("/api/dispatch/orders?page=abc"))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.status").value("error"));
     }
+    @Test void invalidPageSizeIdentifiesTheParameter() throws Exception {
+        mvc.perform(get("/api/dispatch/orders?size=500"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[0].field").value("size"));
+    }
     @Test void blankBodyIs400() throws Exception {
         mvc.perform(post("/api/dispatch/orders").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
