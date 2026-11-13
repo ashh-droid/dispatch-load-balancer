@@ -14,6 +14,8 @@ spring:
       mode: always
 server:
   port: ${PORT:8080}
+  # Honor trusted reverse-proxy scheme/host when the API is served over HTTPS.
+  forward-headers-strategy: native
 management:
   endpoints:
     web:

@@ -46,4 +46,33 @@ class ManagementEndpointsIntegrationTest {
         mvc.perform(get("/api/dispatch/plan")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.summary.totalOrders").value(0));
     }
+
+    @Test void missingResourcesAndVehicleLifecycleHaveStableResponses() throws Exception {
+        mvc.perform(get("/api/dispatch/orders/DOES_NOT_EXIST"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value("error"));
+        mvc.perform(delete("/api/dispatch/orders/DOES_NOT_EXIST"))
+                .andExpect(status().isNotFound());
+        mvc.perform(get("/api/dispatch/vehicles/DOES_NOT_EXIST"))
+                .andExpect(status().isNotFound());
+        mvc.perform(delete("/api/dispatch/vehicles/DOES_NOT_EXIST"))
+                .andExpect(status().isNotFound());
+
+        mvc.perform(post("/api/dispatch/vehicles").contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"vehicles":[{"vehicleId":"V2","capacity":45,"currentLatitude":12.97,
+                    "currentLongitude":77.59,"currentAddress":"Depot 2"}]}
+                    """)).andExpect(status().isOk());
+        mvc.perform(get("/api/dispatch/vehicles?page=0&size=1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.content[0].vehicleId").value("V2"));
+        mvc.perform(get("/api/dispatch/vehicles/V2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.capacity").value(45));
+        mvc.perform(delete("/api/dispatch/vehicles/V2"))
+                .andExpect(status().isNoContent());
+        mvc.perform(get("/api/dispatch/vehicles/V2"))
+                .andExpect(status().isNotFound());
+    }
 }
