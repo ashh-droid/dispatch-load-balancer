@@ -2,6 +2,7 @@ package com.freightfox.dispatch.service;
 
 import com.freightfox.dispatch.domain.Vehicle;
 import com.freightfox.dispatch.dto.VehicleInput;
+import com.freightfox.dispatch.dto.VehicleView;
 import com.freightfox.dispatch.dto.VehiclesRequest;
 import com.freightfox.dispatch.dto.PageResponse;
 import com.freightfox.dispatch.exception.DuplicateIdException;
@@ -31,13 +32,13 @@ public class VehicleService {
         upserts.upsertVehicles(request.vehicles());
     }
     @Transactional(readOnly = true)
-    public PageResponse<VehicleInput> list(int page, int size) {
+    public PageResponse<VehicleView> list(int page, int size) {
         var results = repository.findAll(PageRequest.of(page, size, Sort.by("vehicleId").ascending()));
         return new PageResponse<>(results.getContent().stream().map(VehicleService::toDto).toList(),
                 results.getNumber(), results.getSize(), results.getTotalElements(), results.getTotalPages());
     }
     @Transactional(readOnly = true)
-    public VehicleInput get(String id) {
+    public VehicleView get(String id) {
         return repository.findById(id).map(VehicleService::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found: " + id));
     }
@@ -46,8 +47,8 @@ public class VehicleService {
         repository.deleteById(id);
     }
     @Transactional public void clear() { repository.deleteAllInBatch(); }
-    private static VehicleInput toDto(Vehicle vehicle) {
-        return new VehicleInput(vehicle.getVehicleId(), vehicle.getCapacity(), vehicle.getCurrentLatitude(),
+    private static VehicleView toDto(Vehicle vehicle) {
+        return new VehicleView(vehicle.getVehicleId(), vehicle.getCapacity(), vehicle.getCurrentLatitude(),
                 vehicle.getCurrentLongitude(), vehicle.getCurrentAddress());
     }
 }
