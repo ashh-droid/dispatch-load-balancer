@@ -95,6 +95,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> invalidParameter(ConstraintViolationException ex) {
         return ResponseEntity.badRequest().body(ErrorResponse.of("Invalid pagination or query parameter."));
     }
+    @ExceptionHandler(DeleteDisabledException.class)
+    public ResponseEntity<ErrorResponse> deleteDisabled(DeleteDisabledException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.of(ex.getMessage()));
+    }
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> notFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.of(ex.getMessage()));
