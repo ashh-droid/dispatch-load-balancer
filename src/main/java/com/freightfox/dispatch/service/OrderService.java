@@ -6,7 +6,7 @@ import com.freightfox.dispatch.dto.OrderInput;
 import com.freightfox.dispatch.dto.OrdersRequest;
 import com.freightfox.dispatch.dto.PageResponse;
 import com.freightfox.dispatch.exception.DuplicateIdException;
-import com.freightfox.dispatch.exception.InvalidStrategyException;
+import com.freightfox.dispatch.exception.InvalidRequestException;
 import com.freightfox.dispatch.exception.ResourceNotFoundException;
 import com.freightfox.dispatch.repository.BatchUpsertRepository;
 import com.freightfox.dispatch.repository.OrderRepository;
@@ -56,6 +56,6 @@ public class OrderService {
     }
     private static Priority parsePriority(String input) {
         try { return Priority.valueOf(input.toUpperCase(java.util.Locale.ROOT)); }
-        catch (IllegalArgumentException ex) { throw new InvalidStrategyException("priority must be one of HIGH, MEDIUM, LOW"); }
+        catch (IllegalArgumentException ex) { throw new InvalidRequestException("priority must be one of HIGH, MEDIUM, LOW"); }
     }
 }
