@@ -1,57 +1,70 @@
-# Deployment and FreightFox submission guide
+# Hosting and deployment
 
-This repository contains a **backend-only** API. The three required endpoints remain:
+This is a backend-only Spring Boot service. It supports Docker deployments to Render or other container hosts and exposes its API through Swagger/OpenAPI.
 
-- `POST /api/dispatch/orders`
-- `POST /api/dispatch/vehicles`
-- `GET /api/dispatch/plan`
+## Local verification
 
-The application is not deployed merely because the source is on GitHub. The evaluation email separately requests a **live deployed URL**, accessible **Swagger documentation**, and a **Loom demonstration**.
-
-## 1. Verify locally
-
-Use **Java 21**. From the repository root, run:
+Use JDK 21 and the Maven Wrapper included in the repository:
 
 ```powershell
-java -version
 .\mvnw.cmd -B clean verify
 .\mvnw.cmd spring-boot:run
 ```
 
-On Linux/macOS, use `./mvnw` instead of `.\mvnw.cmd`.
+On macOS/Linux, replace `.\mvnw.cmd` with `./mvnw`.
 
-Verify:
-- `http://localhost:8080/actuator/health` returns an `UP` status.
-- `http://localhost:8080/swagger-ui.html` displays the API.
-- `http://localhost:8080/v3/api-docs` returns an OpenAPI JSON document.
+Local routes:
 
-In **another** PowerShell window at the repository root:
+- Health: `http://localhost:8080/actuator/health`
+- Swagger: `http://localhost:8080/swagger-ui/index.html`
+- OpenAPI: `http://localhost:8080/v3/api-docs`
 
-```powershell
-curl.exe -X POST "http://localhost:8080/api/dispatch/orders" -H "Content-Type: application/json" --data-binary "@samples/orders.json"
-curl.exe -X POST "http://localhost:8080/api/dispatch/vehicles" -H "Content-Type: application/json" --data-binary "@samples/vehicles.json"
-curl.exe "http://localhost:8080/api/dispatch/plan"
-curl.exe "http://localhost:8080/api/dispatch/plan?strategy=distance-aware"
+## Render Docker setup
+
+The repository contains a multi-stage Dockerfile that builds using JDK 21 and runs the JAR with a non-root user.
+
+1. Create a **Web Service** and connect this GitHub repository.
+2. Select the `main` branch and **Docker** as the runtime, with `./Dockerfile` at the root.
+3. Choose the instance type based on required availability and cost.
+4. Configure the health check as `/actuator/health`.
+5. Optionally set the environment flags below.
+6. Deploy and verify the returned HTTPS URL and Swagger's server selector. The server URL should refer to the public HTTPS origin, not localhost.
+
+Current demonstration environment:
+
+- [Live Swagger documentation](https://dispatch-load-balancer-0lce.onrender.com/swagger-ui/index.html)
+- [Service health](https://dispatch-load-balancer-0lce.onrender.com/actuator/health)
+- [OpenAPI specification](https://dispatch-load-balancer-0lce.onrender.com/v3/api-docs)
+
+## Demo data and configuration
+
+Default storage is an in-memory H2 database that is recreated on restart. An empty `GET /api/dispatch/plan` result is valid when no records are loaded.
+
+For an **ephemeral demonstration deployment**, set the following in your hosting dashboard:
+
+```text
+SEED_SAMPLE_DATA=true
+DELETE_ENDPOINTS_ENABLED=false
 ```
 
-The 30-order sample expects 22 assigned, 8 unassigned, a 490 kg assigned load and **73.42 km** under the default greedy strategy.
+- `SEED_SAMPLE_DATA` defaults to `false`. When true, the application seeds the official synthetic 30-order / 5-vehicle sample from classpath resources once per application startup.
+- `DELETE_ENDPOINTS_ENABLED` defaults to `true`, so local API management works. When false, all four DELETE routes return `403` in the existing JSON error format.
+- Other required POST APIs remain open; this is **not** a substitute for authentication. Demo data can still be changed by an API caller while the process runs.
 
-## 2. Deploy a Docker web service on Render
+For manual sample loading, run from the repository root (PowerShell):
 
-A GitHub connection is required to deploy a **private repository**. Authorize access to `ashh-droid/dispatch-load-balancer`; there is **no need to make the source public** unless your assessment reviewer explicitly requires it.
+```powershell
+$base = "https://dispatch-load-balancer-0lce.onrender.com"
+curl.exe -X POST "$base/api/dispatch/orders" -H "Content-Type: application/json" --data-binary "@samples/orders.json"
+curl.exe -X POST "$base/api/dispatch/vehicles" -H "Content-Type: application/json" --data-binary "@samples/vehicles.json"
+(Invoke-RestMethod "$base/api/dispatch/plan").summary | Format-List
+```
 
-1. In the Render dashboard, select **New → Web Service**, connect the GitHub repo, and choose the `main` branch.
-2. Choose the **Docker** runtime. The `Dockerfile` is in the repository root. There is no separate frontend or build/start command to configure.
-3. Review the chosen service plan and costs before creating it. Render may sleep/scale down instances depending on the plan.
-4. Keep the default H2 profile for the quickest assessment demonstration (no database credentials necessary). The app reads Render's `PORT` environment variable; it falls back to 8080 locally.
-5. Configure the **Health Check Path** as `/actuator/health`.
-6. Deploy and open the Render-provided HTTPS URL. Check `/actuator/health`, `/v3/api-docs`, and `/swagger-ui.html`. The Swagger server selector should use the public HTTPS host, not `localhost:8080`.
+With the packaged sample, the default greedy plan reports 30 total orders, 22 assigned, 8 unassigned, 490 units of allocated load and 73.42 km. The alternative `?strategy=distance-aware` retains the same assigned freight.
 
-**Important:** H2 is **in-memory** in the default configuration. Every restart/redeploy clears the uploaded orders and vehicles. After deployment, upload the sample input to the hosted API again before demonstrating `GET /plan`. An HTTPS URL and a successful health check do **not** by themselves prove the sample plan works.
+## Optional PostgreSQL persistence
 
-### Optional persistent PostgreSQL
-
-For data that must survive restarts, configure a supported PostgreSQL server and set these service environment variables:
+For persistence across restarts, use the `postgres` Spring profile and a PostgreSQL 15+ database. Set secrets in the hosting dashboard, **never commit real passwords**:
 
 ```text
 SPRING_PROFILES_ACTIVE=postgres
@@ -60,36 +73,13 @@ DB_USERNAME=YOUR_DB_USERNAME
 DB_PASSWORD=YOUR_DB_PASSWORD
 ```
 
-Set these in Render's **secret environment variable settings**, not in GitHub. `DATABASE_URL` must be a **JDBC URL** with the `jdbc:postgresql://` prefix; some hosting dashboards provide a `postgresql://` URL, which is not directly interchangeable. The PostgreSQL code path is not covered by the default H2 integration test suite. Test it before relying on persistent deployment.
+The `DATABASE_URL` must use the JDBC `jdbc:postgresql://` scheme. This application's schema is initialized using `schema.sql`; H2 uses `MERGE ... KEY` and PostgreSQL uses `INSERT ... ON CONFLICT` for batched upserts. The default CI suite tests H2; run separate PostgreSQL integration tests before relying on that profile in production.
 
-## 3. Verify the live assessment contract
+## Security and operating constraints
 
-Substitute your actual deployed origin for `https://YOUR-SERVICE.onrender.com`:
+- There is **no authentication or authorization**. The server should use synthetic data only; public POST endpoints are writable. Protect or disable public write endpoints before using any real customer data.
+- Default H2 storage does not survive application restarts or Render free-tier sleep cycles. Opt-in seeding restores synthetic demo records on **startup**, not continuously after mutation.
+- Haversine measures great-circle distance, not real roads or driving time.
+- The routing algorithms are deterministic heuristics and do not claim a globally optimal solution.
 
-```powershell
-$base = "https://YOUR-SERVICE.onrender.com"
-curl.exe "$base/actuator/health"
-curl.exe -X POST "$base/api/dispatch/orders" -H "Content-Type: application/json" --data-binary "@samples/orders.json"
-curl.exe -X POST "$base/api/dispatch/vehicles" -H "Content-Type: application/json" --data-binary "@samples/vehicles.json"
-curl.exe "$base/api/dispatch/plan"
-```
-
-Before recording, verify that Swagger's **Try it out** buttons execute requests to the **deployed origin**. Use the included Postman collection for additional validation/error cases.
-
-## 4. Record and submit
-
-Keep the Loom demonstration focused (approximately 3–5 minutes):
-
-1. Show the repository's build checks, `README.md`, and clean project structure.
-2. Open **public HTTPS Swagger** and `/actuator/health`.
-3. Upload official sample orders and vehicles; show 22 assigned and 8 unassigned with capacity constraints.
-4. Show the alternative strategy and one invalid-payload response, explaining the trade-offs honestly.
-5. End with the deployed URL and a brief description of the algorithm's limitations.
-
-Submit the **repository URL**, **live application URL**, **Swagger URL**, and **Loom URL** in the assessment form. If the repository is private, add only the exact evaluator accounts explicitly required by FreightFox; do not expose secrets or personal credentials.
-
-## Demo-only security and operational limits
-
-The assignment API intentionally has **no authentication**. Anyone who knows the hosted URL can create/update/delete assessment records, including the extra bulk-reset endpoints. Use **synthetic sample data only**, not real customer information. For a production system, add authentication and authorization, request throttling and persistent storage before public exposure. The algorithm uses great-circle Haversine distance, not actual drivable roads, and does not claim a globally optimal vehicle-routing solution.
-
-Official platform references: [Render Docker deployment](https://render.com/docs/docker), [Render deployment troubleshooting](https://render.com/docs/troubleshooting-deploys), and [Spring Boot reverse-proxy handling](https://docs.spring.io/spring-boot/how-to/webserver.html).
+References: [Render Docker guide](https://render.com/docs/docker) · [Spring Boot reverse-proxy documentation](https://docs.spring.io/spring-boot/how-to/webserver.html).
