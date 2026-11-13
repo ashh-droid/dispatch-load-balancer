@@ -5,11 +5,11 @@
 
 Java 21 / Spring Boot REST API for priority-aware, capacity-constrained delivery planning. Supports deterministic vehicle assignment, Haversine distances, optional 2-opt route improvement, explicit unassigned-order reasons, pagination, and batched database upserts.
 
-**The optimization is heuristic, not globally optimal.** The Haversine formula estimates great-circle distance, not road kilometres, traffic or ETA. The public endpoints intentionally have no authentication per the assessment scope; do not expose this API as a real multi-user logistics service without authentication and authorization.
+**The optimization is heuristic, not globally optimal.** The Haversine formula estimates great-circle distance, not road kilometres, traffic or ETA. This API demonstrates routing logic with synthetic data and does not include authentication; deployment with real customer data would require access controls.
 
-**Live API:** [Swagger documentation](https://dispatch-load-balancer-0lce.onrender.com/swagger-ui/index.html) · [Health status](https://dispatch-load-balancer-0lce.onrender.com/actuator/health) · [OpenAPI JSON](https://dispatch-load-balancer-0lce.onrender.com/v3/api-docs)
+**Live API:** [Open the service](https://dispatch-load-balancer-0lce.onrender.com/) · [Swagger documentation](https://dispatch-load-balancer-0lce.onrender.com/swagger-ui/index.html) · [Health status](https://dispatch-load-balancer-0lce.onrender.com/actuator/health) · [OpenAPI JSON](https://dispatch-load-balancer-0lce.onrender.com/v3/api-docs)
 
-The deployed service uses a free-tier, in-memory demonstration database. It may restart or sleep when idle; see [deployment notes](docs/DEPLOYMENT.md) for the optional sample-data seeding configuration. The project is API-only; no frontend is required.
+The deployed service uses a free-tier, in-memory demonstration database. It may restart or sleep when idle; see [deployment notes](docs/DEPLOYMENT.md) for the optional sample-data seeding configuration. The project is API-only. The root URL redirects to Swagger; there is no separate application frontend.
 
 ## Quick start
 
