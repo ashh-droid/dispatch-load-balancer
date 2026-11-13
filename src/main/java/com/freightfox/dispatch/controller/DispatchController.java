@@ -56,12 +56,12 @@ public class DispatchController {
     }
     @GetMapping("/orders")
     @Operation(summary = "List stored delivery orders (paginated)")
-    public PageResponse<OrderInput> listOrders(@RequestParam(defaultValue = "0") @Min(0) int page,
+    public PageResponse<OrderView> listOrders(@RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "50") @Min(1) @Max(100) int size,
             @RequestParam(required = false) String priority) { return orders.list(page, size, priority); }
     @GetMapping("/orders/{id}")
     @Operation(summary = "Retrieve an order by ID")
-    public OrderInput getOrder(@PathVariable String id) { return orders.get(id); }
+    public OrderView getOrder(@PathVariable String id) { return orders.get(id); }
     @DeleteMapping("/orders/{id}")
     @Operation(summary = "Delete an order by ID (demo only)")
     public ResponseEntity<Void> deleteOrder(@PathVariable String id) { requireDeletesEnabled(); orders.delete(id); return ResponseEntity.noContent().build(); }
@@ -70,11 +70,11 @@ public class DispatchController {
     public ResponseEntity<Void> clearOrders() { requireDeletesEnabled(); orders.clear(); return ResponseEntity.noContent().build(); }
     @GetMapping("/vehicles")
     @Operation(summary = "List stored fleet vehicles (paginated)")
-    public PageResponse<VehicleInput> listVehicles(@RequestParam(defaultValue = "0") @Min(0) int page,
+    public PageResponse<VehicleView> listVehicles(@RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "50") @Min(1) @Max(100) int size) { return vehicles.list(page, size); }
     @GetMapping("/vehicles/{id}")
     @Operation(summary = "Retrieve a vehicle by ID")
-    public VehicleInput getVehicle(@PathVariable String id) { return vehicles.get(id); }
+    public VehicleView getVehicle(@PathVariable String id) { return vehicles.get(id); }
     @DeleteMapping("/vehicles/{id}")
     @Operation(summary = "Delete a vehicle by ID (demo only)")
     public ResponseEntity<Void> deleteVehicle(@PathVariable String id) { requireDeletesEnabled(); vehicles.delete(id); return ResponseEntity.noContent().build(); }
