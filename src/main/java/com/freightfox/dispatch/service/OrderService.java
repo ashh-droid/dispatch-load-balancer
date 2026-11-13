@@ -3,10 +3,11 @@ package com.freightfox.dispatch.service;
 import com.freightfox.dispatch.domain.Order;
 import com.freightfox.dispatch.domain.Priority;
 import com.freightfox.dispatch.dto.OrderInput;
+import com.freightfox.dispatch.dto.OrderView;
 import com.freightfox.dispatch.dto.OrdersRequest;
 import com.freightfox.dispatch.dto.PageResponse;
 import com.freightfox.dispatch.exception.DuplicateIdException;
-import com.freightfox.dispatch.exception.InvalidStrategyException;
+import com.freightfox.dispatch.exception.InvalidRequestException;
 import com.freightfox.dispatch.exception.ResourceNotFoundException;
 import com.freightfox.dispatch.repository.BatchUpsertRepository;
 import com.freightfox.dispatch.repository.OrderRepository;
@@ -33,7 +34,7 @@ public class OrderService {
         upserts.upsertOrders(request.orders());
     }
     @Transactional(readOnly = true)
-    public PageResponse<OrderInput> list(int page, int size, String priority) {
+    public PageResponse<OrderView> list(int page, int size, String priority) {
         var pageable = PageRequest.of(page, size, Sort.by("orderId").ascending());
         var results = priority == null ? repository.findAll(pageable)
                 : repository.findByPriority(parsePriority(priority), pageable);
@@ -41,7 +42,7 @@ public class OrderService {
                 results.getNumber(), results.getSize(), results.getTotalElements(), results.getTotalPages());
     }
     @Transactional(readOnly = true)
-    public OrderInput get(String id) {
+    public OrderView get(String id) {
         return repository.findById(id).map(OrderService::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
     }
@@ -50,12 +51,12 @@ public class OrderService {
         repository.deleteById(id);
     }
     @Transactional public void clear() { repository.deleteAllInBatch(); }
-    private static OrderInput toDto(Order order) {
-        return new OrderInput(order.getOrderId(), order.getLatitude(), order.getLongitude(), order.getAddress(),
+    private static OrderView toDto(Order order) {
+        return new OrderView(order.getOrderId(), order.getLatitude(), order.getLongitude(), order.getAddress(),
                 order.getPackageWeight(), order.getPriority());
     }
     private static Priority parsePriority(String input) {
         try { return Priority.valueOf(input.toUpperCase(java.util.Locale.ROOT)); }
-        catch (IllegalArgumentException ex) { throw new InvalidStrategyException("priority must be one of HIGH, MEDIUM, LOW"); }
+        catch (IllegalArgumentException ex) { throw new InvalidRequestException("priority must be one of HIGH, MEDIUM, LOW"); }
     }
 }

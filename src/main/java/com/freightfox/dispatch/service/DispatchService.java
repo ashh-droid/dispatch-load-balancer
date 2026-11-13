@@ -35,7 +35,7 @@ public class DispatchService {
     @Transactional(readOnly = true)
     public DispatchPlanResponse plan(String name) {
         DispatchStrategy chosen = strategies.get(name);
-        if (chosen == null) throw new InvalidStrategyException("strategy must be one of greedy, distance-aware");
+        if (chosen == null) throw new InvalidStrategyException("strategy must be one of " + String.join(", ", new java.util.TreeSet<>(strategies.keySet())));
         var orderInputs = orders.findAll().stream().map(order -> new DispatchOrder(order.getOrderId(),
                 new Coordinate(order.getLatitude(), order.getLongitude()), order.getAddress(),
                 order.getPackageWeight(), order.getPriority())).toList();

@@ -1,22 +1,29 @@
-# FreightFox — Dispatch Load Balancer
+# Dispatch Load Balancer
 
 [![Java CI](https://github.com/ashh-droid/dispatch-load-balancer/actions/workflows/ci.yml/badge.svg)](https://github.com/ashh-droid/dispatch-load-balancer/actions/workflows/ci.yml)
 
 
-Backend-only Java 21 / Spring Boot 3.4 REST API for capacity-constrained delivery planning. This project implements the FreightFox assignment's required endpoints and adds tested algorithm options, explicit infeasibility reporting, pagination and data reset for repeated demonstrations.
+Java 21 / Spring Boot REST API for priority-aware, capacity-constrained delivery planning. Supports deterministic vehicle assignment, Haversine distances, optional 2-opt route improvement, explicit unassigned-order reasons, pagination, and batched database upserts.
 
-**The optimization is heuristic, not globally optimal.** The Haversine formula estimates great-circle distance, not road kilometres, traffic or ETA. The public endpoints intentionally have no authentication per the assessment scope; do not expose this API as a real multi-user logistics service without authentication and authorization.
+**The optimization is heuristic, not globally optimal.** The Haversine formula estimates great-circle distance, not road kilometres, traffic or ETA. This API demonstrates routing logic with synthetic data and does not include authentication; deployment with real customer data would require access controls.
+
+**Live API:** [Open the service](https://dispatch-load-balancer-0lce.onrender.com/) · [Swagger documentation](https://dispatch-load-balancer-0lce.onrender.com/swagger-ui/index.html) · [Health status](https://dispatch-load-balancer-0lce.onrender.com/actuator/health) · [OpenAPI JSON](https://dispatch-load-balancer-0lce.onrender.com/v3/api-docs)
+
+The deployed service uses a free-tier, in-memory demonstration database. It may restart or sleep when idle; see [deployment notes](docs/DEPLOYMENT.md) for the optional sample-data seeding configuration. The project is API-only. The root URL redirects to Swagger; there is no separate application frontend.
 
 ## Quick start
 
-Requirements: **Java 21** and **Maven 3.9+**; internet access is needed the first time Maven retrieves dependencies.
+Requires **JDK 21**. The repository includes the official Maven Wrapper; Maven does not need to be installed separately. First-time builds require internet access to resolve dependencies and, if necessary, download Maven.
 
 ```bash
-mvn -B verify
-mvn spring-boot:run
-```
+# macOS / Linux
+./mvnw -B verify
+./mvnw spring-boot:run
 
-**The official Maven Wrapper is included** (`mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties`). On Windows PowerShell you can use `./mvnw.cmd -B verify` and `./mvnw.cmd spring-boot:run` without installing Maven globally; on Linux/macOS use `./mvnw`. A first-time wrapper invocation still requires network access to download Maven. Running with Java 21 avoids the Byte Buddy/Mockito incompatibility observed when this Java 21 project was tested under Java 25.
+# Windows PowerShell
+.\\mvnw.cmd -B verify
+.\\mvnw.cmd spring-boot:run
+```
 
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - OpenAPI: http://localhost:8080/v3/api-docs
@@ -77,7 +84,7 @@ The three required endpoint paths and original request/response fields are retai
 3. Update route, load and endpoint. Report unassigned orders as `NO_VEHICLES_AVAILABLE`, `EXCEEDS_MAX_VEHICLE_CAPACITY`, or `INSUFFICIENT_REMAINING_CAPACITY`.
 4. Distances run from initial vehicle coordinates through its assigned stops; do not include a return-to-depot leg. HIGH first means allocated fleet capacity first, not delivered first.
 
-Baseline planning complexity is **O(n log n + n × m)** for n orders and m vehicles. The optional **distance-aware** strategy applies up to three sweeps of 2-opt reversals to each route containing 3–60 stops. It never changes which orders are delivered or vehicle loading, and only accepts a strictly shorter route; it can be slower on large route groups. Above 60 stops per vehicle, it deliberately keeps the greedy sequence.
+Baseline planning complexity is **O(n log n + n × m)** for n orders and m vehicles. The optional **distance-aware** strategy applies up to three bounded 2-opt sweeps per route with 3–1,000 stops. Each candidate reversal compares only the changed boundary edges, making a sweep O(k²) in the route's stop count k. The strategy preserves every assignment and accepts only a strictly shorter route. Routes above 1,000 stops retain the greedy sequence to bound work.
 
 **Do not confuse fewer km with a better outcome if fewer orders are delivered.** This implementation does not drop LOW orders to improve its distance metric. Future configurable business trade-offs could be evaluated separately.
 
@@ -94,7 +101,7 @@ The supplied data contains **645 kg of freight** and just **500 kg total capacit
 | VEH005 | 105 / 110 | 14.44 | 1 HIGH, 3 MEDIUM, 1 LOW |
 | **Unassigned** | **155** | — | **8 LOW** |
 
-**22 orders / 490 kg assigned, 8 LOW orders unassigned, 73.42 km total distance.** Distance-aware route reordering also gives **73.42 km** on this sample; no improvement is claimed. These values are independently checked by compiling the Java algorithm and running it on the official input. They are not a proof of optimality; zero Haversine km reflects duplicated sample coordinates.
+**22 orders / 490 kg assigned, 8 LOW orders unassigned, 73.42 km total distance.** Distance-aware route reordering also gives **73.42 km** on this sample because each vehicle visits at most two distinct locations. The automated test suite separately verifies improvement on a 200-stop zigzag route and non-regression on seeded random cases. These results are not a proof of global optimality; zero Haversine km reflects duplicated sample coordinates.
 
 ## Design and persistence
 
@@ -114,13 +121,13 @@ mvn -B verify
 
 `verify` runs unit, MVC, H2 repository, full application, ArchUnit layer-rule and seeded property-style scenario tests. JaCoCo enforces an **80% line-coverage threshold for the algorithm and distance packages**.
 
-**Verified November 13, 2026:** the complete Maven verification succeeded locally, and the `Java CI` workflow passed on the initial repository commit. The supplied local JaCoCo HTML report showed **90% instruction coverage, 80% branch coverage, and approximately 92% line coverage overall**. Coverage values describe that verified run, not a guarantee about future revisions; rerun `verify` and read `target/site/jacoco/index.html` after changes. The status badge above reflects GitHub's latest CI result.
+**Coverage (verified local run):** 90% instruction, 80% branch, and approximately 92% line coverage overall. The CI badge reflects the latest automated build; new revisions should be checked with `./mvnw verify` and `target/site/jacoco/index.html`. Coverage checks target the strategy and distance packages.
 
 Important tests: official sample regression, Haversine calculations, capacity invariants, deterministic tie breaking, unassigned reasons, bad content types (415/406), invalid field types, malformed requests, invalid strategy names, CRUD flows and 200 seeded-random scenarios for the two algorithms. A performance-tagged test also checks a large order set, but deliberately does not impose unstable wall-clock CI limits.
 
 ## Deployment
 
-The included multi-stage Dockerfile compiles the JAR and runs it under a **non-root** user. The backend listens on `${PORT:8080}`, and forwarded proxy headers are handled for correct Swagger links behind an HTTPS proxy. A hosted application needs a public HTTPS URL and accessible Swagger UI, as specified in the assessment email. **No live deployment is claimed here until its URL is verified.** The default H2 database resets whenever the container restarts. See [deployment and submission steps](docs/DEPLOYMENT.md), including private-repository setup, sample-data upload and optional PostgreSQL.
+The multi-stage Dockerfile builds the JAR and runs the service as a **non-root** user. It listens on `${PORT:8080}` and supports HTTPS reverse-proxy headers. The [live Swagger page](https://dispatch-load-balancer-0lce.onrender.com/swagger-ui/index.html) runs on Render. By default H2 is in memory; `SEED_SAMPLE_DATA=true` opts into loading the packaged synthetic data on startup, so a sleeping/restarted demo has predictable sample results. `DELETE_ENDPOINTS_ENABLED=false` disables all DELETE endpoints with a structured 403 response on shared hosting. Both flags are optional; see the [deployment guide](docs/DEPLOYMENT.md). PostgreSQL can be configured for persistent storage.
 
 ## Future production improvements
 

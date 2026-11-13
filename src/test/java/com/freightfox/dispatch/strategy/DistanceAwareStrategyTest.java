@@ -31,6 +31,27 @@ class DistanceAwareStrategyTest {
         assertThat(b.dispatchPlan().getFirst().totalLoad()).isEqualByComparingTo(a.dispatchPlan().getFirst().totalLoad());
     }
 
+    @Test void improvesA200StopRouteWithoutChangingDeliveries() {
+        var orders = new ArrayList<DispatchOrder>();
+        for (int i = 0; i < 200; i++) {
+            orders.add(order(String.format("O%03d", i), 1,
+                    i % 2 == 0 ? 0.0 : 1.0, (i / 2) * 0.002));
+        }
+        var fleet = List.of(new DispatchVehicle("big-truck", BigDecimal.valueOf(200),
+                new Coordinate(0, 0), "Depot"));
+        var original = greedy.plan(orders, fleet);
+        var result = optimized.plan(orders, fleet);
+
+        assertThat(result.summary().assignedOrders()).isEqualTo(200);
+        assertThat(result.unassignedOrders()).isEmpty();
+        assertThat(result.summary().distanceKm())
+                .isLessThan(original.summary().distanceKm() - 10.0);
+        assertThat(result.dispatchPlan().getFirst().assignedOrders()).hasSize(200);
+        assertThat(result.dispatchPlan().getFirst().totalLoad())
+                .isEqualByComparingTo(BigDecimal.valueOf(200));
+        verifyInvariants(result, orders, fleet);
+    }
+
     @Test void seededRandomInvariantsCoverBothStrategies() {
         var rng = new Random(451971);
         for (int trial = 0; trial < 200; trial++) {

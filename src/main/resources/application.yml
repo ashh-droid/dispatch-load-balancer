@@ -24,3 +24,8 @@ management:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+# Opt-in sample seeding for ephemeral demonstration deployments (disabled locally).
+app:
+  seed-sample-data: ${SEED_SAMPLE_DATA:false}
+  delete-endpoints-enabled: ${DELETE_ENDPOINTS_ENABLED:true}
