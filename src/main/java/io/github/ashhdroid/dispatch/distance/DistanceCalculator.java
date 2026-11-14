@@ -1,0 +1,5 @@
+package io.github.ashhdroid.dispatch.distance;
+
+public interface DistanceCalculator {
+    double distanceKm(Coordinate origin, Coordinate destination);
+}

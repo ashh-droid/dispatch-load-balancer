@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.freightfox</groupId>
+    <groupId>io.github.ashhdroid</groupId>
     <artifactId>dispatch-load-balancer</artifactId>
     <version>1.0.0</version>
     <name>Dispatch Load Balancer</name>
@@ -36,8 +36,8 @@
                 <executions><execution><goals><goal>prepare-agent</goal></goals></execution><execution><id>report</id><phase>verify</phase><goals><goal>report</goal></goals></execution>
                     <execution><id>core-coverage</id><phase>verify</phase><goals><goal>check</goal></goals>
                         <configuration><rules><rule><element>PACKAGE</element><includes>
-                        <include>com.freightfox.dispatch.strategy</include>
-                        <include>com.freightfox.dispatch.distance</include>
+                        <include>io.github.ashhdroid.dispatch.strategy</include>
+                        <include>io.github.ashhdroid.dispatch.distance</include>
                         </includes><limits><limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.80</minimum>
                         </limit></limits></rule></rules></configuration>
                     </execution></executions>
