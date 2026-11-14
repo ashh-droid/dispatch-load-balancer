@@ -1,8 +1,8 @@
-package com.freightfox.dispatch.config;
+package io.github.ashhdroid.dispatch.config;
 
-import com.freightfox.dispatch.repository.OrderRepository;
-import com.freightfox.dispatch.repository.VehicleRepository;
-import com.freightfox.dispatch.service.DispatchService;
+import io.github.ashhdroid.dispatch.repository.OrderRepository;
+import io.github.ashhdroid.dispatch.repository.VehicleRepository;
+import io.github.ashhdroid.dispatch.service.DispatchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

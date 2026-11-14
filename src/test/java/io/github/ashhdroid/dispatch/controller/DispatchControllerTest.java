@@ -1,8 +1,8 @@
-package com.freightfox.dispatch.controller;
+package io.github.ashhdroid.dispatch.controller;
 
-import com.freightfox.dispatch.service.OrderService;
-import com.freightfox.dispatch.service.VehicleService;
-import com.freightfox.dispatch.service.DispatchService;
+import io.github.ashhdroid.dispatch.service.OrderService;
+import io.github.ashhdroid.dispatch.service.VehicleService;
+import io.github.ashhdroid.dispatch.service.DispatchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

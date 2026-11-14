@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.strategy;
+package io.github.ashhdroid.dispatch.strategy;
 
 import java.util.List;
 

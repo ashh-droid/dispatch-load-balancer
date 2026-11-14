@@ -1,6 +1,6 @@
-package com.freightfox.dispatch.strategy;
+package io.github.ashhdroid.dispatch.strategy;
 
-import com.freightfox.dispatch.distance.DistanceCalculator;
+import io.github.ashhdroid.dispatch.distance.DistanceCalculator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;

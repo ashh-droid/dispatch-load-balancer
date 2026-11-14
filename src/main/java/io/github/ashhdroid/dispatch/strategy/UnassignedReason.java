@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.strategy;
+package io.github.ashhdroid.dispatch.strategy;
 
 /** Machine-readable reasons why a delivery cannot fit the selected plan. */
 public enum UnassignedReason {

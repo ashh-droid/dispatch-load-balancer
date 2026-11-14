@@ -1,6 +1,6 @@
-package com.freightfox.dispatch.strategy;
+package io.github.ashhdroid.dispatch.strategy;
 
-import com.freightfox.dispatch.distance.Coordinate;
+import io.github.ashhdroid.dispatch.distance.Coordinate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
