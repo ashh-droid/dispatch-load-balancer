@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.exception;
+package io.github.ashhdroid.dispatch.exception;
 
 /** Raised when demo data mutation endpoints are disabled on a hosted instance. */
 public class DeleteDisabledException extends RuntimeException {

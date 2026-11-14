@@ -1,10 +1,10 @@
-package com.freightfox.dispatch.exception;
+package io.github.ashhdroid.dispatch.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.validation.ConstraintViolationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.freightfox.dispatch.dto.ErrorResponse;
-import com.freightfox.dispatch.dto.ErrorResponse.FieldError;
+import io.github.ashhdroid.dispatch.dto.ErrorResponse;
+import io.github.ashhdroid.dispatch.dto.ErrorResponse.FieldError;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

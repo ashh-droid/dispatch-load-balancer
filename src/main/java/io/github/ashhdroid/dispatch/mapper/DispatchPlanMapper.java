@@ -1,7 +1,7 @@
-package com.freightfox.dispatch.mapper;
+package io.github.ashhdroid.dispatch.mapper;
 
-import com.freightfox.dispatch.dto.DispatchPlanResponse;
-import com.freightfox.dispatch.strategy.DispatchPlan;
+import io.github.ashhdroid.dispatch.dto.DispatchPlanResponse;
+import io.github.ashhdroid.dispatch.strategy.DispatchPlan;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Locale;

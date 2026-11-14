@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.dto;
+package io.github.ashhdroid.dispatch.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
