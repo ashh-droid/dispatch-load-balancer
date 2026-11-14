@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.controller;
+package io.github.ashhdroid.dispatch.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

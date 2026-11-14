@@ -1,9 +1,9 @@
-package com.freightfox.dispatch.service;
+package io.github.ashhdroid.dispatch.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.freightfox.dispatch.repository.OrderRepository;
-import com.freightfox.dispatch.repository.VehicleRepository;
+import io.github.ashhdroid.dispatch.repository.OrderRepository;
+import io.github.ashhdroid.dispatch.repository.VehicleRepository;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;

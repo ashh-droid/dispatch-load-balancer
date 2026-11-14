@@ -1,10 +1,10 @@
-package com.freightfox.dispatch.repository;
+package io.github.ashhdroid.dispatch.repository;
 
-import com.freightfox.dispatch.domain.Priority;
-import com.freightfox.dispatch.dto.*;
-import com.freightfox.dispatch.exception.DuplicateIdException;
-import com.freightfox.dispatch.service.OrderService;
-import com.freightfox.dispatch.service.VehicleService;
+import io.github.ashhdroid.dispatch.domain.Priority;
+import io.github.ashhdroid.dispatch.dto.*;
+import io.github.ashhdroid.dispatch.exception.DuplicateIdException;
+import io.github.ashhdroid.dispatch.service.OrderService;
+import io.github.ashhdroid.dispatch.service.VehicleService;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

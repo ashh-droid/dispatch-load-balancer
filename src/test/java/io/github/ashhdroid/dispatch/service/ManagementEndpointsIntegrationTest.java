@@ -1,7 +1,7 @@
-package com.freightfox.dispatch.service;
+package io.github.ashhdroid.dispatch.service;
 
-import com.freightfox.dispatch.repository.OrderRepository;
-import com.freightfox.dispatch.repository.VehicleRepository;
+import io.github.ashhdroid.dispatch.repository.OrderRepository;
+import io.github.ashhdroid.dispatch.repository.VehicleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

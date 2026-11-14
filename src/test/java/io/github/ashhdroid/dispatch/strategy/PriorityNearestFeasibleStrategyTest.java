@@ -1,8 +1,8 @@
-package com.freightfox.dispatch.strategy;
+package io.github.ashhdroid.dispatch.strategy;
 
-import com.freightfox.dispatch.distance.Coordinate;
-import com.freightfox.dispatch.distance.HaversineDistanceCalculator;
-import com.freightfox.dispatch.domain.Priority;
+import io.github.ashhdroid.dispatch.distance.Coordinate;
+import io.github.ashhdroid.dispatch.distance.HaversineDistanceCalculator;
+import io.github.ashhdroid.dispatch.domain.Priority;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;

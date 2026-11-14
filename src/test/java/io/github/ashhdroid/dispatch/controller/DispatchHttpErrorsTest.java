@@ -1,9 +1,9 @@
-package com.freightfox.dispatch.controller;
+package io.github.ashhdroid.dispatch.controller;
 
-import com.freightfox.dispatch.service.OrderService;
-import com.freightfox.dispatch.service.VehicleService;
-import com.freightfox.dispatch.service.DispatchService;
-import com.freightfox.dispatch.exception.DuplicateIdException;
+import io.github.ashhdroid.dispatch.service.OrderService;
+import io.github.ashhdroid.dispatch.service.VehicleService;
+import io.github.ashhdroid.dispatch.service.DispatchService;
+import io.github.ashhdroid.dispatch.exception.DuplicateIdException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,7 +59,7 @@ class DispatchHttpErrorsTest {
         mvc.perform(get("/api/dispatch/not-a-resource")).andExpect(status().isNotFound());
     }
     @Test void invalidStrategyIs400() throws Exception {
-        doThrow(new com.freightfox.dispatch.exception.InvalidStrategyException("strategy must be one of greedy, distance-aware"))
+        doThrow(new io.github.ashhdroid.dispatch.exception.InvalidStrategyException("strategy must be one of greedy, distance-aware"))
                 .when(dispatch).plan("unknown");
         mvc.perform(get("/api/dispatch/plan?strategy=unknown"))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.status").value("error"));

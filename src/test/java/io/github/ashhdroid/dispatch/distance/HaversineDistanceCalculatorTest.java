@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.distance;
+package io.github.ashhdroid.dispatch.distance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
