@@ -1,14 +1,14 @@
-package com.freightfox.dispatch.service;
+package io.github.ashhdroid.dispatch.service;
 
-import com.freightfox.dispatch.distance.Coordinate;
-import com.freightfox.dispatch.dto.DispatchPlanResponse;
-import com.freightfox.dispatch.exception.InvalidStrategyException;
-import com.freightfox.dispatch.mapper.DispatchPlanMapper;
-import com.freightfox.dispatch.repository.OrderRepository;
-import com.freightfox.dispatch.repository.VehicleRepository;
-import com.freightfox.dispatch.strategy.DispatchOrder;
-import com.freightfox.dispatch.strategy.DispatchStrategy;
-import com.freightfox.dispatch.strategy.DispatchVehicle;
+import io.github.ashhdroid.dispatch.distance.Coordinate;
+import io.github.ashhdroid.dispatch.dto.DispatchPlanResponse;
+import io.github.ashhdroid.dispatch.exception.InvalidStrategyException;
+import io.github.ashhdroid.dispatch.mapper.DispatchPlanMapper;
+import io.github.ashhdroid.dispatch.repository.OrderRepository;
+import io.github.ashhdroid.dispatch.repository.VehicleRepository;
+import io.github.ashhdroid.dispatch.strategy.DispatchOrder;
+import io.github.ashhdroid.dispatch.strategy.DispatchStrategy;
+import io.github.ashhdroid.dispatch.strategy.DispatchVehicle;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;

@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.repository;
+package io.github.ashhdroid.dispatch.repository;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;

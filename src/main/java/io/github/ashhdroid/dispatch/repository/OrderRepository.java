@@ -1,7 +1,7 @@
-package com.freightfox.dispatch.repository;
+package io.github.ashhdroid.dispatch.repository;
 
-import com.freightfox.dispatch.domain.Order;
-import com.freightfox.dispatch.domain.Priority;
+import io.github.ashhdroid.dispatch.domain.Order;
+import io.github.ashhdroid.dispatch.domain.Priority;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

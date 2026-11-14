@@ -1,7 +1,7 @@
-package com.freightfox.dispatch.repository;
+package io.github.ashhdroid.dispatch.repository;
 
-import com.freightfox.dispatch.dto.OrderInput;
-import com.freightfox.dispatch.dto.VehicleInput;
+import io.github.ashhdroid.dispatch.dto.OrderInput;
+import io.github.ashhdroid.dispatch.dto.VehicleInput;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 

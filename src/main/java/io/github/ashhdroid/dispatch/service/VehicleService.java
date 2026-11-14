@@ -1,14 +1,14 @@
-package com.freightfox.dispatch.service;
+package io.github.ashhdroid.dispatch.service;
 
-import com.freightfox.dispatch.domain.Vehicle;
-import com.freightfox.dispatch.dto.VehicleInput;
-import com.freightfox.dispatch.dto.VehicleView;
-import com.freightfox.dispatch.dto.VehiclesRequest;
-import com.freightfox.dispatch.dto.PageResponse;
-import com.freightfox.dispatch.exception.DuplicateIdException;
-import com.freightfox.dispatch.exception.ResourceNotFoundException;
-import com.freightfox.dispatch.repository.BatchUpsertRepository;
-import com.freightfox.dispatch.repository.VehicleRepository;
+import io.github.ashhdroid.dispatch.domain.Vehicle;
+import io.github.ashhdroid.dispatch.dto.VehicleInput;
+import io.github.ashhdroid.dispatch.dto.VehicleView;
+import io.github.ashhdroid.dispatch.dto.VehiclesRequest;
+import io.github.ashhdroid.dispatch.dto.PageResponse;
+import io.github.ashhdroid.dispatch.exception.DuplicateIdException;
+import io.github.ashhdroid.dispatch.exception.ResourceNotFoundException;
+import io.github.ashhdroid.dispatch.repository.BatchUpsertRepository;
+import io.github.ashhdroid.dispatch.repository.VehicleRepository;
 import java.util.HashSet;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

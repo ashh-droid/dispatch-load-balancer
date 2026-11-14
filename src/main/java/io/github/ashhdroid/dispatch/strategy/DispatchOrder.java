@@ -1,7 +1,7 @@
-package com.freightfox.dispatch.strategy;
+package io.github.ashhdroid.dispatch.strategy;
 
-import com.freightfox.dispatch.domain.Priority;
-import com.freightfox.dispatch.distance.Coordinate;
+import io.github.ashhdroid.dispatch.domain.Priority;
+import io.github.ashhdroid.dispatch.distance.Coordinate;
 import java.math.BigDecimal;
 
 public record DispatchOrder(String orderId, Coordinate location, String address,
