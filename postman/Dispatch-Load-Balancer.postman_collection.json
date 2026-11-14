@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "FreightFox Dispatch Load Balancer",
-    "description": "API-first FreightFox assignment sample and negative tests. Execute requests 1→2→3 first.",
+    "name": "Dispatch Load Balancer",
+    "description": "API-first dispatch planning sample and validation tests. Execute requests 1→2→3 first.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
