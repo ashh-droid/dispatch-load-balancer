@@ -1,7 +1,7 @@
-package com.freightfox.dispatch.dto;
+package io.github.ashhdroid.dispatch.dto;
 
-import com.freightfox.dispatch.domain.Priority;
-import com.freightfox.dispatch.strategy.UnassignedReason;
+import io.github.ashhdroid.dispatch.domain.Priority;
+import io.github.ashhdroid.dispatch.strategy.UnassignedReason;
 import java.math.BigDecimal;
 import java.util.List;
 

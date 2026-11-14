@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.domain;
+package io.github.ashhdroid.dispatch.domain;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

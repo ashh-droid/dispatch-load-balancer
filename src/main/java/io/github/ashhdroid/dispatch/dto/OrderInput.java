@@ -1,6 +1,6 @@
-package com.freightfox.dispatch.dto;
+package io.github.ashhdroid.dispatch.dto;
 
-import com.freightfox.dispatch.domain.Priority;
+import io.github.ashhdroid.dispatch.domain.Priority;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 

@@ -1,6 +1,6 @@
-package com.freightfox.dispatch.dto;
+package io.github.ashhdroid.dispatch.dto;
 
-import com.freightfox.dispatch.domain.Priority;
+import io.github.ashhdroid.dispatch.domain.Priority;
 import java.math.BigDecimal;
 
 /** Read-only API representation, independent of request validation. */

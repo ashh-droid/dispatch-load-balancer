@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.dto;
+package io.github.ashhdroid.dispatch.dto;
 
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
