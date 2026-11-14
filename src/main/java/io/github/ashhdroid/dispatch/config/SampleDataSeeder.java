@@ -1,10 +1,10 @@
-package com.freightfox.dispatch.config;
+package io.github.ashhdroid.dispatch.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.freightfox.dispatch.dto.OrdersRequest;
-import com.freightfox.dispatch.dto.VehiclesRequest;
-import com.freightfox.dispatch.service.OrderService;
-import com.freightfox.dispatch.service.VehicleService;
+import io.github.ashhdroid.dispatch.dto.OrdersRequest;
+import io.github.ashhdroid.dispatch.dto.VehiclesRequest;
+import io.github.ashhdroid.dispatch.service.OrderService;
+import io.github.ashhdroid.dispatch.service.VehicleService;
 import java.io.IOException;
 import java.io.InputStream;
 import org.slf4j.Logger;

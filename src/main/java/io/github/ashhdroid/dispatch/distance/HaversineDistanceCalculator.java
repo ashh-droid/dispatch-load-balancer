@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.distance;
+package io.github.ashhdroid.dispatch.distance;
 
 import org.springframework.stereotype.Component;
 

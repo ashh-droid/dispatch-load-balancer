@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.controller;
+package io.github.ashhdroid.dispatch.controller;
 
 import java.net.URI;
 import org.springframework.http.HttpStatus;

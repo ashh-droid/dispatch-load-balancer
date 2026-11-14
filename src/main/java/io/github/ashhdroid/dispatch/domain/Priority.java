@@ -1,4 +1,4 @@
-package com.freightfox.dispatch.domain;
+package io.github.ashhdroid.dispatch.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Locale;

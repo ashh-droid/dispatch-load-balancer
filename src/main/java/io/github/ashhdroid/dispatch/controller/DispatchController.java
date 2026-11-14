@@ -1,10 +1,10 @@
-package com.freightfox.dispatch.controller;
+package io.github.ashhdroid.dispatch.controller;
 
-import com.freightfox.dispatch.dto.*;
-import com.freightfox.dispatch.exception.DeleteDisabledException;
-import com.freightfox.dispatch.service.DispatchService;
-import com.freightfox.dispatch.service.OrderService;
-import com.freightfox.dispatch.service.VehicleService;
+import io.github.ashhdroid.dispatch.dto.*;
+import io.github.ashhdroid.dispatch.exception.DeleteDisabledException;
+import io.github.ashhdroid.dispatch.service.DispatchService;
+import io.github.ashhdroid.dispatch.service.OrderService;
+import io.github.ashhdroid.dispatch.service.VehicleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,17 +37,17 @@ public class DispatchController {
         @ApiResponse(responseCode = "200", description = "Orders accepted"),
         @ApiResponse(responseCode = "400", description = "Invalid order data", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "415", description = "Use application/json", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
-    public ResponseEntity<com.freightfox.dispatch.dto.ApiResponse> upsertOrders(@Valid @RequestBody OrdersRequest request) {
+    public ResponseEntity<io.github.ashhdroid.dispatch.dto.ApiResponse> upsertOrders(@Valid @RequestBody OrdersRequest request) {
         orders.accept(request);
-        return ResponseEntity.ok(com.freightfox.dispatch.dto.ApiResponse.success("Delivery orders accepted."));
+        return ResponseEntity.ok(io.github.ashhdroid.dispatch.dto.ApiResponse.success("Delivery orders accepted."));
     }
     @PostMapping(value = "/vehicles", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Upsert fleet vehicles", responses = {
         @ApiResponse(responseCode = "200", description = "Vehicles accepted"),
         @ApiResponse(responseCode = "400", description = "Invalid fleet data", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
-    public ResponseEntity<com.freightfox.dispatch.dto.ApiResponse> upsertVehicles(@Valid @RequestBody VehiclesRequest request) {
+    public ResponseEntity<io.github.ashhdroid.dispatch.dto.ApiResponse> upsertVehicles(@Valid @RequestBody VehiclesRequest request) {
         vehicles.accept(request);
-        return ResponseEntity.ok(com.freightfox.dispatch.dto.ApiResponse.success("Vehicle details accepted."));
+        return ResponseEntity.ok(io.github.ashhdroid.dispatch.dto.ApiResponse.success("Vehicle details accepted."));
     }
     @GetMapping(value = "/plan", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Plan delivery routes", description = "Default greedy strategy or optional distance-aware 2-opt route reorder, preserving all assigned freight.")
